@@ -5,7 +5,7 @@
 used together properly construct a single deque of token ptrs representing the horn clause.
 */
 
-#include "stdafx.h"
+//#include "stdafx.h"
 #include "phrase.h"
 #include <algorithm>
 #include <iterator>

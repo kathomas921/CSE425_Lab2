@@ -7,7 +7,7 @@
 #define phrase_h
 
 
-#include "stdafx.h"
+//#include "stdafx.h"
 #include "token.h"
 #include "derivedToken.h"
 #include <deque>

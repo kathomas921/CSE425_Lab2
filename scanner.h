@@ -5,7 +5,7 @@
 #ifndef SCANNER_H
 #define SCANNER_H
 
-#include "stdafx.h"
+//#include "stdafx.h"
 #include "token.h"
 #include <iostream>
 #include <fstream>

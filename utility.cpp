@@ -3,7 +3,7 @@
 //Katharine Thomas & James Wilson
 //various functions helpful for formatting/debugging
 
-#include "stdafx.h"
+//#include "stdafx.h"
 #include "utility.h"
 #include <iostream>
 #include <fstream>

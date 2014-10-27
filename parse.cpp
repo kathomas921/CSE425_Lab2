@@ -7,7 +7,7 @@ the context-free grammar shown in ReadMe.txt. The semAnalysis function prints th
 clauses as well as unique labels and numbers to the output file.
 */
 
-#include "stdafx.h"
+//#include "stdafx.h"
 #include "parse.h"
 #include "scanner.h"
 #include "phrase.h"
@@ -19,6 +19,7 @@ clauses as well as unique labels and numbers to the output file.
 #include <vector>
 #include <deque>
 #include "utility.h"
+
 
 
 using namespace std;

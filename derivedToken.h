@@ -5,7 +5,7 @@
 #ifndef DERIVEDTOKEN_H
 #define DERIVEDTOKEN_H
 
-#include "stdafx.h"
+//#include "stdafx.h"
 #include "token.h"
 
 struct label : public token {

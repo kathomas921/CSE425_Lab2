@@ -5,7 +5,7 @@
 #ifndef TOKEN_H
 #define TOKEN_H
 
-#include "stdafx.h"
+//#include "stdafx.h"
 #include <iostream>
 #include <memory>
 #include <deque>

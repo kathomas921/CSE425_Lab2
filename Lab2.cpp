@@ -3,7 +3,7 @@
 // Defines the entry point of the program.  It properly parses the input file (parse) and properly 
 // prints it to the output file (semAnalysis).
 
-#include "stdafx.h"
+//#include "stdafx.h"
 #include "scanner.h"
 #include "parse.h"
 #include "token.h"

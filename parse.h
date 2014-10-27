@@ -5,7 +5,7 @@
 #ifndef PARSE_H
 #define PARSE_H
 
-#include "stdafx.h"
+//#include "stdafx.h"
 #include "token.h"
 #include <string>
 

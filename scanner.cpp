@@ -6,7 +6,7 @@ an input file and, creates a smart pointer to that token, and assigns it a "kind
 (a terminal value) so it can be properly interpreted by the parser.
 */
 
-#include "stdafx.h"
+//#include "stdafx.h"
 #include "scanner.h"
 #include "token.h"
 #include "derivedToken.h"

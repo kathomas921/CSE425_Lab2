@@ -4,7 +4,7 @@
 /*The token struct defines the necessary characteristics of a token
 (a set of white space delimited characters drawn from the input file) */
 
-#include "stdafx.h"
+//#include "stdafx.h"
 
 #include "token.h"
 #include <algorithm>
