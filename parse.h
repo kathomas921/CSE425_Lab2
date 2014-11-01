@@ -12,7 +12,7 @@
 
 using namespace std;
 
-enum errors{ NO_ERROR, BAD_IF, BAD_OF, BAD_PRED , BAD_PARSE, BAD_INPUT};
+enum ERRORS{ NO_ERROR, BAD_IF, BAD_OF, BAD_PRED , BAD_PARSE, BAD_INPUT, END};
 
 //recursive descent functions for parising
 void

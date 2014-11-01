@@ -19,6 +19,7 @@ clauses as well as unique labels and numbers to the output file.
 #include <vector>
 #include <deque>
 #include "utility.h"
+#include <string>
 
 
 
@@ -59,12 +60,18 @@ void advance(){
 	++tokenNum;
 
 
-	try{ 
+	try{
+        cout << "tokenNum: " << tokenNum << ", advance() try to scan" << endl;
 		*scan >> scan->currentTkn;
 	}
-	catch (...){
-		throw "advance::scanning error";
+	catch (string& s){
+        cout << "advance:: caught msg: " << s << endl << endl;
+		throw ERRORS(END);
 	}
+//    catch (...){
+//        cout << "advance::unexpected error "<< endl;
+//        throw string("advance::scanning error");
+//    }
 	currentPhrase.push_back(scan->nextTkn);
 
 }
@@ -73,7 +80,7 @@ void expectNext(TERMINAL t){
 	expt = terminal_to_string(t);
 
 	if (scan->nextTkn->kind != t) {
-		throw "Expected token not found.";
+		throw string("Expected token not found.");
 	}
 	else
 		return;
@@ -84,7 +91,7 @@ void expectNext(TERMINAL t){
 void isSymbol() {
 	if (scan->nextTkn->kind != LABEL && scan->nextTkn->kind != NUMBER) {
 		expt = "SYMBOL";
-		throw "Incorrectly formed Symbol clause";
+		throw string("Incorrectly formed Symbol clause");
 	}
 	else {
 		currentSymb = make_shared<symb>(scan->nextTkn);
@@ -100,7 +107,7 @@ void isName(){
 	}
 	else{
 		expt = "LABEL";
-		throw "Incorrectly formed name";
+		throw string("Incorrectly formed name");
 	}
 
 }
@@ -125,7 +132,7 @@ void isArgs(){
 		}
 		if (count % 2 == 0){
 			expt = "SYMBOL";
-			throw "Incorrectly formed Args clause";
+			throw string("Incorrectly formed Args clause");
 		}
 		advance();
 	}
@@ -140,6 +147,8 @@ void isPredicate(){
 		currentPred->n = move(currentName);
 
 		expectNext(LEFTPAREN);
+        cout << "isPred 1 calls advance()" << endl;
+
 		advance();
 
 		if (!scan->nextTkn->isRightParen()){
@@ -149,17 +158,29 @@ void isPredicate(){
 		}
 		expectNext(RIGHTPAREN);
 		currentPred->complete = true;
+        cout << "isPred 2 calls advance() " << endl;
+
 		advance();
 
 
 	}
-	catch (...) {
+	catch (string &s) {
+        /////////////
+        cout << "isPred: caught msg: " << s << endl;
+        ////////////
 		if (!currentPred->complete) {
-		throw "Incorrectly formed Predicate clause";
+		throw string("Incorrectly formed Predicate clause");
 		}
 		else
 			return;
 	}
+    /////////////
+//    catch (...) {
+//        cout << "isPred: unexpected error" << endl;
+//        throw string("Incorrectly formed Predicate clause");
+//
+//    }
+    /////////////
 }
 
 void isBody(){
@@ -171,6 +192,8 @@ void isBody(){
 		if (delimiter){
 			if (scan->nextTkn->kind == AND) {
 				expectNext(AND);
+                cout << "isBody 1 calling advance()" << endl;
+
 				advance();
 				delimiter = false;
 				count += 1;
@@ -182,6 +205,8 @@ void isBody(){
 
 		if (!delimiter) {
 			if (scan->currentTkn->isAnd()) {
+                cout << "isBody 2 calling advance()" << endl;
+
 				advance();
 			}
 			isPredicate();
@@ -191,7 +216,7 @@ void isBody(){
 		}
 
 		if (count % 2 == 0)
-			throw "Incorrectly formed Body clause";
+			throw string("Incorrectly formed Body clause");
 	}
 	currentBody->complete = true;
 }
@@ -218,7 +243,7 @@ void isHorn(){
 		}
 		currentHorn->complete = true;
 	}
-	catch (...) {
+	catch (string &s) {
 		rcvd = terminal_to_string(scan->nextTkn->kind);
 		if (expt != rcvd) {
 			cout << endl << "Error detected @ ";
@@ -251,7 +276,6 @@ int parse(string &input) {
 
 	ifstream ifs(input);
 	if (!ifs) {
-		cout << "Error: could not open file." << endl;
 		return BAD_IF;
 	}
 
@@ -262,7 +286,7 @@ int parse(string &input) {
 		advance();
 		advance();
 	}
-	catch (...){
+	catch (string &s){
 		cout << "Parse error detected. Too few inputs to parse tokens." << endl;
 		return BAD_PARSE;
 	}
@@ -286,15 +310,25 @@ int parse(string &input) {
 
 			}
 		}
-		catch (...) {
+		catch (string &s) {         
 			if (scan->nextTkn != nullptr) {
 				advance();
 			}
 
 			else status = false;
 		}
-
-	}
+        /////////////
+        catch (ERRORS &e) {
+            cout << "END caught in parse" << endl;
+            status = false;
+        }
+        catch (...) {
+            cout << "parse 2::unexpected error" << endl;
+            return BAD_PARSE;
+        }
+        /////////////
+        
+	}    
 	return NO_ERROR;
 }
 
@@ -320,7 +354,6 @@ int semAnalysis(string &output) {
 		}
 	}
 
-
 	//-------UNIQUE LABELS------//
 	for (string s : allLabels){
 		if (find(uniqueLabels.begin(), uniqueLabels.end(), s) == uniqueLabels.end()) { 
@@ -328,6 +361,7 @@ int semAnalysis(string &output) {
 		}
 	}
 
+	sort(uniqueLabels.begin(), uniqueLabels.end());
 	for (string s : uniqueLabels) {
 		ofs << s << endl;
 	}
@@ -335,26 +369,27 @@ int semAnalysis(string &output) {
 	
 
 	//-------NUMS------//
-	deque<string> allNums;
-	deque<string> uniqueNums;
+	deque<double> allNums;
+	deque<double> uniqueNums;
 
 	//-------ALL NUMS------//
 	for (dequeTP d : hornClause) {
 		for (tokenPtr token_itr : d) {
 			if (token_itr->isNumeric()) {
-				allNums.push_back(token_itr->str);
+				allNums.push_back(stod(token_itr->str));
 			}
 		}
 	}
 
 	//-------UNIQUE NUMS------//
-	for (string s : allNums){
-		if (find(uniqueNums.begin(), uniqueNums.end(), s) == uniqueNums.end()) {
-			uniqueNums.push_back(s);
+	for (double i : allNums){
+		if (find(uniqueNums.begin(), uniqueNums.end(), i) == uniqueNums.end()) {
+			uniqueNums.push_back(i);
 		}
 	}
-
-	for (string s : uniqueNums) {
+	
+	sort(uniqueNums.begin(), uniqueNums.end());
+	for (double s : uniqueNums) {
 		ofs << s << endl;
 	}
 	ofs << endl << endl;

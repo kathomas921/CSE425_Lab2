@@ -1,0 +1,37 @@
+hornclause -> head [SEPARATOR body]
+head -> predicate
+body -> predicate {AND predicate}
+predicate -> name LEFTPAREN [args] RIGHTPAREN
+name -> LABEL
+args -> symbol {COMMA symbol}
+symbol -> LABEL | NUMBER
+
+
+to 
+
+hornclause -> LEFTPAREN head [body] RIGHTPAREN
+head -> predicate
+body -> LEFTPAREN predicate {predicate} RIGHTPAREN
+predicate -> LEFTPAREN name {symbol} RIGHTPAREN
+name -> LABEL
+symbol -> LABEL | NUMBER
+
+
+updates to parse:
+
+	predicate:
+		from:	name LEFTPAREN [symbol {, symbol}] RIGHTPAREN
+		to: 	LEFTPAREN name {symbol} RIGHTPAREN
+
+	body:
+		from :	predicate {AND predicate}
+		to: 	LEFTPAREN predicate {predicate} RIGHTPAREN
+
+	hornclause:
+		from: 	head [SEPARATOR body]
+		to: 	LEFTPAREN head [body] RIGHTPAREN
+
+	get rid of isArgs()
+	
+
+updates to scanner:	 no longer need AND, SEP, COMMA

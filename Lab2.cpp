@@ -32,8 +32,8 @@ int main(int argc, char* argv[])
 		return BAD_INPUT;
 	}
 
-
 	if (parse(in_file) == NO_ERROR) {
+        cout << "main:  no error in parse" << endl;
 		result = semAnalysis(out_file);
 		}
 	else {

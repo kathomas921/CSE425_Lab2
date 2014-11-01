@@ -78,8 +78,9 @@ bool token::isSep() {
 }
 
 void parenthesize(dequeTP & dtp){
-	dtp.push_front(make_shared<token>(LEFTPAREN, "("));
-	dtp.push_back(make_shared<token>(RIGHTPAREN, ")"));
+    TERMINAL lp = LEFTPAREN; TERMINAL rp = RIGHTPAREN; //needed for g++
+	dtp.push_front(make_shared<token>(lp, "("));
+	dtp.push_back(make_shared<token>(rp, ")"));
 }
 
 string terminal_to_string(TERMINAL t) {

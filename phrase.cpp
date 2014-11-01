@@ -137,7 +137,7 @@ dequeTP horn::flatten(bool format){
 
 //---------------------------------------------------------------- ostream Insertion Operators
 
-ostream &operator<<(ostream &out, name n){
-	out << &(getPOS(n)); // correctness?	
-	return out;
-};
+// ostream &operator<<(ostream &out, name n){
+// 	out << &(getPOS(n)); // correctness?	
+// 	return out;
+// };

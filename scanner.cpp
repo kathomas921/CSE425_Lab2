@@ -16,6 +16,7 @@ an input file and, creates a smart pointer to that token, and assigns it a "kind
 #include <string>
 #include <exception>
 #include "utility.h"
+#include <string>
 using namespace std;
 
 
@@ -26,12 +27,19 @@ scanner::scanner(ifstream &ifs) : file(ifs) {}
 
 
 scanner& operator>>(scanner& scan, tokenPtr & t) {
+   // cout << "in scan >> op" << endl;
 	string tempStr;
-	if (scanner::nextTkn != nullptr) t = move(scanner::nextTkn);
+   // cout << "check if next token: " << endl;
+    if (scanner::nextTkn != nullptr) {
+        t = move(scanner::nextTkn);
+        cout << "next token exists: " << scanner::nextTkn->str << endl;
+    }
+    else{
+        cout << "no next token" << endl;
+    }
 
-	
 	if (scan.file >> tempStr){
-
+        cout << "tempStr: " << tempStr << endl;
 			scanner::nextTkn = make_shared<token>(tempStr);
 
 			if (scanner::nextTkn->isLabel()) {
@@ -65,7 +73,8 @@ scanner& operator>>(scanner& scan, tokenPtr & t) {
 	}
 
 	else{
-		throw("scanner::EOF");
+      //  cout << "scanner EOF" << endl;
+		throw string("scanner::EOF");
 	}
 	
 	return scan;
