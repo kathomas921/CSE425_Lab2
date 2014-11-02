@@ -1,12 +1,9 @@
 //phrase.h
-//Katharine Thomas & James Wilson
-//Prototype for functions in phrase.cpp
-
 #ifndef phrase_h
 #define phrase_h
 
 
-//#include "stdafx.h"
+#include "stdafx.h"
 #include "token.h"
 #include "derivedToken.h"
 #include <deque>
@@ -36,7 +33,7 @@ struct phrase {
 typedef shared_ptr<phrase> phrasePtr;
 
 
-//string getPOS(const phrase & p);
+string getPOS(const phrase & p);
 
 struct name : phrase { 
 	tokenPtr t; 

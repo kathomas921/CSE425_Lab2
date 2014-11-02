@@ -1,9 +1,6 @@
-// Lab2.cpp
-// Katharine Thomas and James Wilson
-// Defines the entry point of the program.  It properly parses the input file (parse) and properly 
-// prints it to the output file (semAnalysis).
-
-//#include "stdafx.h"
+// 425Lab1.cpp : Defines the entry point for the console application.
+//
+#include "stdafx.h"
 #include "scanner.h"
 #include "parse.h"
 #include "token.h"
@@ -32,8 +29,8 @@ int main(int argc, char* argv[])
 		return BAD_INPUT;
 	}
 
+
 	if (parse(in_file) == NO_ERROR) {
-        cout << "main:  no error in parse" << endl;
 		result = semAnalysis(out_file);
 		}
 	else {

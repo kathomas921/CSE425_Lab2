@@ -5,7 +5,7 @@
 #ifndef SCANNER_H
 #define SCANNER_H
 
-//#include "stdafx.h"
+#include "stdafx.h"
 #include "token.h"
 #include <iostream>
 #include <fstream>
@@ -19,8 +19,14 @@
 class scanner {
 private:
 	ifstream& file;
+	//static tokenPtr currentTkn;
+	
+	//shared_ptr<token> nextTokenPtr;
+	//string phrase;
+	//string horn;
 	string expt;
-
+	/*vector<shared_ptr<token>> phrase;
+	vector<token> horn;*/
 
 public:
 	static tokenPtr nextTkn, currentTkn;
@@ -33,7 +39,16 @@ public:
 		return false;
 	}
 
+	friend scanner& operator>>(scanner& scan, dequeTP & v);
+	friend scanner& operator>>(scanner& scan, token & t);
 	friend scanner& operator>>(scanner& scan, tokenPtr & t);
+	//
+
+	//friend scanner& operator>>(scanner& scan, vector<token> & d);
+	//friend scanner& operator>>(scanner& scan, vector<tokenPtr> & d);
+
+	//friend scanner& operator>>(scanner& scan, deque<token> & v);
+	
 
 };
 

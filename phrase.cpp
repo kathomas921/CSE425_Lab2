@@ -1,11 +1,6 @@
-//phrase.cpp
-//Katharine Thomas & James Wilson
-//
-/*Defines the constructors for all of the part-of-speech (POS) structs.  The flatten methods when
-used together properly construct a single deque of token ptrs representing the horn clause.
-*/
+// phrase.cpp
 
-//#include "stdafx.h"
+#include "stdafx.h"
 #include "phrase.h"
 #include <algorithm>
 #include <iterator>
@@ -137,7 +132,7 @@ dequeTP horn::flatten(bool format){
 
 //---------------------------------------------------------------- ostream Insertion Operators
 
-// ostream &operator<<(ostream &out, name n){
-// 	out << &(getPOS(n)); // correctness?	
-// 	return out;
-// };
+ostream &operator<<(ostream &out, name n){
+	out << &(getPOS(n)); // correctness?	
+	return out;
+};

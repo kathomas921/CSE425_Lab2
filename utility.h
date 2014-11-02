@@ -1,7 +1,3 @@
-//utility.cpp
-//Katharine Thomas & James Wilson
-//Prototypes for functions in utility.cpp
-
 #ifndef utility_h
 #define utility_h
 

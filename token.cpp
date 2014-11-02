@@ -1,10 +1,10 @@
-//token.cpp
+//tokenStruct.cpp
 //Katharine Thomas & James Wilson
 //
-/*The token struct defines the necessary characteristics of a token
+/*The tokenStruct struct defines the necessary characteristics of a token
 (a set of white space delimited characters drawn from the input file) */
 
-//#include "stdafx.h"
+#include "stdafx.h"
 
 #include "token.h"
 #include <algorithm>
@@ -28,6 +28,7 @@ ostream &operator<<(ostream &out, token t){
 
 bool token::isLabel(){
 	bool result = (!str.empty() && (count_if(str.begin(), str.end(), ::isalpha) == str.size()));
+
 	return result;
 }
 
@@ -37,6 +38,7 @@ bool token::isLeftParen() {
 	if (str == "(") {
 		return true;
 	}
+
 	return result;
 }
 
@@ -45,49 +47,58 @@ bool token::isRightParen() {
 	if (str == ")") {
 		result = true;
 	}
+
 	return result;
 }
 
-bool token::isComma() {
-	bool result = false;
-	if (str == ",") {
-		result = true;
-	}
-	return result;
-}
+//bool token::isComma() {
+//	bool result = false;
+//	if (str == ",") {
+//		result = true;
+//	}
+////	if (result) cprintl("isComma(`" + str + "') = 1");
+////	else cprintl("isComma(`" + str + "') = 0");
+//
+//	return result;
+//}
 
 bool token::isNumeric() {
 	bool result = (!str.empty() && (count_if(str.begin(), str.end(), ::isdigit) == str.size()));
 	return result;
 }
-
-bool token::isAnd() {
-	bool result = false;
-	if (str == "^") {
-		result = true;
-	}
-	return result;
-}
-
-bool token::isSep() {
-	bool result = false;
-	if (str == ":-") {
-		return true;
-	}
-	return result;
-}
+//
+//bool token::isAnd() {
+//	bool result = false;
+//	if (str == "^") {
+//		result = true;
+//	}
+////	if (result) cprintl("isAnd(`" + str + "') = 1");
+////	else cprintl("isAnd(`" + str + "') = 0");
+//
+//	return result;
+//}
+//
+//bool token::isSep() {
+//	bool result = false;
+//	if (str == ":-") {
+//		return true;
+//	}
+////	if (result) cprintl("isSep(`" + str + "') = 1");
+////	else cprintl("iSep(`" + str + "') = 0");
+//
+//	return result;
+//}
 
 void parenthesize(dequeTP & dtp){
-    TERMINAL lp = LEFTPAREN; TERMINAL rp = RIGHTPAREN; //needed for g++
-	dtp.push_front(make_shared<token>(lp, "("));
-	dtp.push_back(make_shared<token>(rp, ")"));
+	dtp.push_front(make_shared<token>(LEFTPAREN, "("));
+	dtp.push_back(make_shared<token>(RIGHTPAREN, ")"));
 }
 
 string terminal_to_string(TERMINAL t) {
 
-	if (t == AND) {
-		return "AND";
-	}
+	//if (t == AND) {
+	//	return "AND";
+	//}
 	if (t == LABEL) {
 		return "LABEL";
 	}
@@ -100,13 +111,23 @@ string terminal_to_string(TERMINAL t) {
 	if (t == RIGHTPAREN) {
 		return "RIGHTPAREN";
 	}
-	if (t == SEPARATOR) {
-		return "SEPARATOR";
-	}
-	if (t == COMMA) {
-		return "COMMA";
-	}
+	//if (t == SEPARATOR) {
+	//	return "SEPARATOR";
+	//}
+	//if (t == COMMA) {
+	//	return "COMMA";
+	//}
 	else {
 		return "UNKNOWN";
 	}
+}
+
+TERMINAL str2terminal(string str){
+	token tkn(str);
+	if (tkn.isLabel())			return LABEL;
+	if (tkn.isNumeric())		return NUMBER;
+	if (tkn.isLeftParen())		return LEFTPAREN;
+	if (tkn.isRightParen())		return RIGHTPAREN;
+
+	return UNKNOWN;
 }

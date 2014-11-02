@@ -7,19 +7,19 @@ the context-free grammar shown in ReadMe.txt. The semAnalysis function prints th
 clauses as well as unique labels and numbers to the output file.
 */
 
-//#include "stdafx.h"
+#include "stdafx.h"
 #include "parse.h"
 #include "scanner.h"
 #include "phrase.h"
 #include "token.h"
+#include "utility.h"
+#include "symbolTable.h"
 #include <iostream>
 #include <fstream>
 #include <algorithm>
 #include <string>
 #include <vector>
 #include <deque>
-#include "utility.h"
-#include <string>
 
 
 
@@ -59,19 +59,13 @@ bool isKind(string kind, tokenPtr thisToken){
 void advance(){
 	++tokenNum;
 
-
 	try{
-        cout << "tokenNum: " << tokenNum << ", advance() try to scan" << endl;
 		*scan >> scan->currentTkn;
 	}
-	catch (string& s){
-        cout << "advance:: caught msg: " << s << endl << endl;
+	catch (string &s) {
 		throw ERRORS(END);
 	}
-//    catch (...){
-//        cout << "advance::unexpected error "<< endl;
-//        throw string("advance::scanning error");
-//    }
+
 	currentPhrase.push_back(scan->nextTkn);
 
 }
@@ -101,7 +95,7 @@ void isSymbol() {
 
 
 void isName(){
-	
+
 	if (scan->currentTkn->isLabel()){
 		currentName = make_shared<name>(scan->currentTkn);
 	}
@@ -112,43 +106,58 @@ void isName(){
 
 }
 
-void isArgs(){
-	bool status = true;
-	bool delimiter = false;
-	int count = 0;
-	while (scan->nextTkn->kind != RIGHTPAREN){
-
-		if (delimiter){
-			expectNext(COMMA);
-			advance();
-			delimiter = false;
-			count += 1;
-		}
-		if (!delimiter){
-			isSymbol();
-			currentPred->s.push_back(move(currentSymb));
-			count += 1;
-			delimiter = true;
-		}
-		if (count % 2 == 0){
-			expt = "SYMBOL";
-			throw string("Incorrectly formed Args clause");
-		}
-		advance();
-	}
-}
+//void isArgs(){
+//	bool status = true;
+//	bool delimiter = false;
+//	int count = 0;
+//	while (scan->nextTkn->kind != RIGHTPAREN){
+//
+//		if (delimiter){
+//			expectNext(COMMA);
+//			advance();
+//			delimiter = false;
+//			count += 1;
+//		}
+//		if (!delimiter){
+//			isSymbol();
+//			currentPred->s.push_back(move(currentSymb));
+//			count += 1;
+//			delimiter = true;
+//		}
+//		if (count % 2 == 0){
+//			expt = "SYMBOL";
+//			throw string("Incorrectly formed Args clause");
+//		}
+//		advance();
+//	}
+//}
 
 
 void isPredicate(){
 	if (currentPred == nullptr) currentPred = make_shared<pred>();
 
+	//try{
+	//	isName();
+	//	currentPred->n = move(currentName);
+
+	//	expectNext(LEFTPAREN);
+	//	advance();
+
+	//	if (!scan->nextTkn->isRightParen()){
+	//		expt = "LABEL";
+	//		isArgs();
+
+	//	}
+	//	expectNext(RIGHTPAREN);
+	//	currentPred->complete = true;
+	//	advance();
+	//}
 	try{
+		expectNext(LEFTPAREN);
 		isName();
 		currentPred->n = move(currentName);
 
 		expectNext(LEFTPAREN);
-        cout << "isPred 1 calls advance()" << endl;
-
 		advance();
 
 		if (!scan->nextTkn->isRightParen()){
@@ -158,29 +167,16 @@ void isPredicate(){
 		}
 		expectNext(RIGHTPAREN);
 		currentPred->complete = true;
-        cout << "isPred 2 calls advance() " << endl;
-
 		advance();
-
-
 	}
+
 	catch (string &s) {
-        /////////////
-        cout << "isPred: caught msg: " << s << endl;
-        ////////////
 		if (!currentPred->complete) {
-		throw string("Incorrectly formed Predicate clause");
+			throw string("Incorrectly formed Predicate clause");
 		}
 		else
 			return;
 	}
-    /////////////
-//    catch (...) {
-//        cout << "isPred: unexpected error" << endl;
-//        throw string("Incorrectly formed Predicate clause");
-//
-//    }
-    /////////////
 }
 
 void isBody(){
@@ -192,8 +188,6 @@ void isBody(){
 		if (delimiter){
 			if (scan->nextTkn->kind == AND) {
 				expectNext(AND);
-                cout << "isBody 1 calling advance()" << endl;
-
 				advance();
 				delimiter = false;
 				count += 1;
@@ -205,8 +199,6 @@ void isBody(){
 
 		if (!delimiter) {
 			if (scan->currentTkn->isAnd()) {
-                cout << "isBody 2 calling advance()" << endl;
-
 				advance();
 			}
 			isPredicate();
@@ -256,7 +248,7 @@ void isHorn(){
 				expt = "LABEL";
 				rcvd = terminal_to_string(scan->currentTkn->kind);
 			}
-		
+
 			cout << "Input token: " << tokenNum << " -> Expected: " << expt << ", Received: " << rcvd << endl;
 			cout << "Tokens seen so far in clause: ";
 			for (tokenPtr tp : currentPhrase)
@@ -276,6 +268,7 @@ int parse(string &input) {
 
 	ifstream ifs(input);
 	if (!ifs) {
+		cout << "Error: could not open file." << endl;
 		return BAD_IF;
 	}
 
@@ -310,30 +303,27 @@ int parse(string &input) {
 
 			}
 		}
-		catch (string &s) {         
+		catch (string &s) {
 			if (scan->nextTkn != nullptr) {
 				advance();
 			}
 
 			else status = false;
 		}
-        /////////////
-        catch (ERRORS &e) {
-            cout << "END caught in parse" << endl;
-            status = false;
-        }
-        catch (...) {
-            cout << "parse 2::unexpected error" << endl;
-            return BAD_PARSE;
-        }
-        /////////////
-        
-	}    
+		catch (ERRORS &e) {
+			status = false;
+		}
+		catch (...) {
+			cout << "Unexpected parse error." << endl;
+			return BAD_PARSE;
+		}
+
+	}
 	return NO_ERROR;
 }
 
 int semAnalysis(string &output) {
-	
+
 	ofstream ofs(output);
 	if (!ofs) {
 		cout << "Error: could not write to output file." << endl;
@@ -356,7 +346,7 @@ int semAnalysis(string &output) {
 
 	//-------UNIQUE LABELS------//
 	for (string s : allLabels){
-		if (find(uniqueLabels.begin(), uniqueLabels.end(), s) == uniqueLabels.end()) { 
+		if (find(uniqueLabels.begin(), uniqueLabels.end(), s) == uniqueLabels.end()) {
 			uniqueLabels.push_back(s);
 		}
 	}
@@ -366,7 +356,7 @@ int semAnalysis(string &output) {
 		ofs << s << endl;
 	}
 	ofs << endl << endl;
-	
+
 
 	//-------NUMS------//
 	deque<double> allNums;
@@ -387,17 +377,17 @@ int semAnalysis(string &output) {
 			uniqueNums.push_back(i);
 		}
 	}
-	
+
 	sort(uniqueNums.begin(), uniqueNums.end());
 	for (double s : uniqueNums) {
 		ofs << s << endl;
 	}
 	ofs << endl << endl;
-	
+
 
 	//-------HORN CLAUSE------//
 	for (dequeTP d : hornClause) {
-		for (tokenPtr token_itr : d){ 
+		for (tokenPtr token_itr : d){
 			ofs << token_itr << " ";
 		}
 		ofs << endl;

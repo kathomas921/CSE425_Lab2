@@ -1,9 +1,4 @@
-//derivedToken.cpp
-//Katharine Thomas & James Wilson
-//
-//Constructors for the label and number derived structs
-
-//#include "stdafx.h"
+#include "stdafx.h"
 #include "derivedToken.h"
 
 #include <sstream>

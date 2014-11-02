@@ -5,16 +5,16 @@
 #ifndef PARSE_H
 #define PARSE_H
 
-//#include "stdafx.h"
+#include "stdafx.h"
 #include "token.h"
 #include <string>
 
 
 using namespace std;
 
-enum ERRORS{ NO_ERROR, BAD_IF, BAD_OF, BAD_PRED , BAD_PARSE, BAD_INPUT, END};
+enum ERRORS{ NO_ERROR, BAD_IF, BAD_OF, BAD_PRED , BAD_PARSE, BAD_INPUT, END };
 
-//recursive descent functions for parising
+
 void
 advance(),
 expectNext(TERMINAL t),

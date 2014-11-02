@@ -1,18 +1,20 @@
-//token.h
+//tokenStruct.h
 //Katharine Thomas & James Wilson
 //Prototype for functions of the tokenStruct struct
 
 #ifndef TOKEN_H
 #define TOKEN_H
 
-//#include "stdafx.h"
+#include "stdafx.h"
 #include <iostream>
 #include <memory>
 #include <deque>
 
 using namespace std;
 
-enum TERMINAL{ UNKNOWN, AND, COMMA, LABEL, LEFTPAREN, NUMBER, RIGHTPAREN, SEPARATOR };
+enum TERMINAL{ UNKNOWN, LABEL, LEFTPAREN, NUMBER, RIGHTPAREN, ENDOF};
+
+
 
 struct token {
 	TERMINAL kind;
@@ -25,9 +27,9 @@ struct token {
 	bool isNumeric();
 	bool isLeftParen();
 	bool isRightParen();
-	bool isComma();
-	bool isAnd();
-	bool isSep();
+	//bool isComma();
+	//bool isAnd();
+	//bool isSep();
 };
 
 
@@ -40,5 +42,6 @@ ostream &operator<<(ostream &out, token t);
 ostream &operator<<(ostream &out, tokenPtr t);
 
 string terminal_to_string(TERMINAL t);
+TERMINAL str2terminal(string str);
 
 #endif
